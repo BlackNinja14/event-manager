@@ -1,4 +1,3 @@
-// app/components/EventModal.tsx
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,15 +12,16 @@ interface Event {
   dates: Date;
   location: string;
 }
+
 interface EventModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddEvent: () => void;
-  selectedData: Event
+  selectedData: Event;
 }
 
 export default function EventModal({ isOpen, onClose, onAddEvent, selectedData }: EventModalProps) {
-  const router = useRouter()
+  const router = useRouter();
   const [name, setName] = useState(selectedData.name ?? '');
   const [description, setDescription] = useState(selectedData?.description ?? '');
   const [startDate, setStartDate] = useState<Date | null>(selectedData?.dates ?? null);
@@ -33,7 +33,7 @@ export default function EventModal({ isOpen, onClose, onAddEvent, selectedData }
     e.preventDefault();
 
     if (!startDate) {
-      alert('Please select a start date.');
+      alert('Please select a start date and time.');
       return;
     }
 
@@ -50,8 +50,7 @@ export default function EventModal({ isOpen, onClose, onAddEvent, selectedData }
           dates,
           location
         });
-      }
-      else {
+      } else {
         await axiosInstance.post(`/events`, {
           name,
           description,
@@ -61,19 +60,19 @@ export default function EventModal({ isOpen, onClose, onAddEvent, selectedData }
       }
       onAddEvent();
       onClose();
-      router.replace('/events')
     } catch (error) {
       console.error('Failed to add event:', error);
     }
   };
 
   const handleReset = () => {
-    setName('')
-    setDescription('')
-    setIsRecurring(false)
-    setLocation('')
-    setRecurrenceCount(1)
-  }
+    setName('');
+    setDescription('');
+    setIsRecurring(false);
+    setLocation('');
+    setRecurrenceCount(1);
+  };
+
   return (
     isOpen ? (
       <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
@@ -102,12 +101,14 @@ export default function EventModal({ isOpen, onClose, onAddEvent, selectedData }
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2" htmlFor="startDate">Start Date</label>
+              <label className="block text-gray-700 mb-2" htmlFor="startDate">Start Date and Time</label>
               <DatePicker
                 selected={startDate}
                 onChange={(date) => setStartDate(date)}
                 className="w-full border border-gray-300 p-2 rounded"
-                dateFormat="MMMM d, yyyy"
+                dateFormat="MMMM d, yyyy h:mm aa"
+                showTimeSelect
+                timeFormat="HH:mm"
                 required
               />
             </div>
@@ -148,7 +149,7 @@ export default function EventModal({ isOpen, onClose, onAddEvent, selectedData }
             <div className="flex justify-end space-x-2">
               <button
                 type="button"
-                onClick={() => { onClose(), handleReset() }}
+                onClick={() => { onClose(); handleReset(); }}
                 className="px-4 py-2 bg-gray-300 text-gray-800 rounded"
               >
                 Cancel

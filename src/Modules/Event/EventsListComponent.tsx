@@ -29,7 +29,6 @@ const EventsListComponent = (eventsList: PropType) => {
     )
     const handleAddEvent = async () => {
         const newData = await axiosInstance.get(`/events`)
-        console.log(newData)
         setEvents(newData.data.data)
     };
     const handleEdit = async (item: Event) => {
@@ -81,6 +80,8 @@ const EventsListComponent = (eventsList: PropType) => {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
                                 })}</p>
                                 <div className="mt-4 flex space-x-2">
                                     <button
